@@ -113,12 +113,13 @@ send() returns the value of MIME::Lite->as_string(), or on failure returns nothi
 use Template;
 use MIME::Lite;
 use HTML::FormatText::WithLinks::AndTables;
+use File::Spec::Functions;
 
 sub send {
     shift if $_[0] eq __PACKAGE__ or ref $_[0];
 
     my ($path_to_tt2, $args) = @_;
-    if ($path_to_tt2 =~ /^\//) {
+    if (file_name_is_absolute $path_to_tt2) {
         croak "Invalid path to template ($path_to_tt2)\n"
             if not -e $path_to_tt2 and -T _; # make sure template exists
         $args->{tt_new}->{ABSOLUTE} ||= 1;
